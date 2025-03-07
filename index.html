@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BetSmart - Modern Betting Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+        }
+        .bet-card:hover {
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">BetSmart</h1>
+            <div class="flex items-center space-x-4">
+                <span class="balance bg-blue-700 px-4 py-2 rounded-lg">
+                    Balance: $1000.00
+                </span>
+                <button class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg">
+                    <i class="bi bi-plus-lg"></i> Deposit
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-4">
+        <!-- Sports Filter -->
+        <div class="flex overflow-x-auto gap-2 mb-6 pb-2">
+            <button class="bg-blue-600 text-white px-6 py-2 rounded-full whitespace-nowrap">
+                All Sports
+            </button>
+            <button class="bg-white hover:bg-gray-100 px-6 py-2 rounded-full whitespace-nowrap">
+                <i class="bi bi-dribbble"></i> Basketball
+            </button>
+            <button class="bg-white hover:bg-gray-100 px-6 py-2 rounded-full whitespace-nowrap">
+                <i class="bi bi-football"></i> Football
+            </button>
+            <button class="bg-white hover:bg-gray-100 px-6 py-2 rounded-full whitespace-nowrap">
+                <i class="bi bi-trophy"></i> Tennis
+            </button>
+        </div>
+
+        <!-- Betting Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Match Card 1 -->
+            <div class="bet-card bg-white p-4 rounded-xl shadow-sm">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm text-gray-500">NBA</span>
+                    <span class="text-sm text-gray-500">Today, 20:00</span>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold">Lakers</span>
+                        <button onclick="placeBet(this, 'Lakers', 1.92)" class="bg-gray-100 hover:bg-blue-50 px-4 py-2 rounded-lg">
+                            1.92
+                        </button>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold">Celtics</span>
+                        <button onclick="placeBet(this, 'Celtics', 1.88)" class="bg-gray-100 hover:bg-blue-50 px-4 py-2 rounded-lg">
+                            1.88
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Match Card 2 -->
+            <div class="bet-card bg-white p-4 rounded-xl shadow-sm">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm text-gray-500">Premier League</span>
+                    <span class="text-sm text-gray-500">Today, 21:00</span>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold">Liverpool</span>
+                        <button onclick="placeBet(this, 'Liverpool', 2.10)" class="bg-gray-100 hover:bg-blue-50 px-4 py-2 rounded-lg">
+                            2.10
+                        </button>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold">Arsenal</span>
+                        <button onclick="placeBet(this, 'Arsenal', 1.75)" class="bg-gray-100 hover:bg-blue-50 px-4 py-2 rounded-lg">
+                            1.75
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bet Slip -->
+        <div id="betSlip" class="fixed bottom-0 left-0 right-0 bg-white shadow-lg transform translate-y-full transition-transform duration-300 p-4">
+            <div class="container mx-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold">Bet Slip</h3>
+                    <button onclick="closeBetSlip()" class="text-gray-500">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <div id="betDetails" class="mb-4">
+                    <!-- Bet details will be inserted here -->
+                </div>
+                <div class="flex gap-4">
+                    <input type="number" id="betAmount" placeholder="Enter amount" class="flex-1 border rounded-lg px-4 py-2" />
+                    <button onclick="confirmBet()" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg">
+                        Place Bet
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentBet = null;
+        
+        function placeBet(button, team, odds) {
+            currentBet = { team, odds };
+            const betSlip = document.getElementById('betSlip');
+            const betDetails = document.getElementById('betDetails');
+            
+            betDetails.innerHTML = `
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <p class="font-semibold">${team}</p>
+                    <p class="text-gray-600">Odds: ${odds}</p>
+                </div>
+            `;
+            
+            betSlip.style.transform = 'translateY(0)';
+        }
+
+        function closeBetSlip() {
+            const betSlip = document.getElementById('betSlip');
+            betSlip.style.transform = 'translateY(100%)';
+            currentBet = null;
+        }
+
+        function confirmBet() {
+            const amount = document.getElementById('betAmount').value;
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+
+            if (!currentBet) {
+                alert('Please select a bet');
+                return;
+            }
+
+            const potentialWin = (amount * currentBet.odds).toFixed(2);
+            alert(`Bet placed successfully!\nTeam: ${currentBet.team}\nAmount: $${amount}\nPotential Win: $${potentialWin}`);
+            
+            closeBetSlip();
+            document.getElementById('betAmount').value = '';
+        }
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
